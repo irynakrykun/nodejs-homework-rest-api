@@ -1,11 +1,11 @@
-const { HttpError } = require("../helpers");
+const { HttpError, jimpImageSize } = require("../helpers");
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const path = require("path");
 const fs = require('fs/promises');
-const Jimp = require('jimp');
+
 
 require("dotenv").config();
 const { SECRET_KEY } = process.env;
@@ -97,7 +97,7 @@ const updateAvatar = async (req, res, next) => {
   try {
      const { _id } = req.user;
     const { path: tempUpload, originalname } = req.file;
-    (await Jimp.read(tempUpload)).resize(250, 250)
+    await jimpImageSize(tempUpload);
     const fileName = `${_id}_${originalname}`
     const resultUpload = path.join(avatarsDir, fileName);
       await fs.rename(tempUpload, resultUpload);
