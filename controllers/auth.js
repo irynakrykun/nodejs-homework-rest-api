@@ -97,10 +97,10 @@ const updateAvatar = async (req, res, next) => {
   try {
      const { _id } = req.user;
     const { path: tempUpload, originalname } = req.file;
-    await jimpImageSize(tempUpload);
-    const fileName = `${_id}_${originalname}`
+      const fileName = `${_id}_${originalname}`
     const resultUpload = path.join(avatarsDir, fileName);
-      await fs.rename(tempUpload, resultUpload);
+    await fs.rename(tempUpload, resultUpload);
+    await jimpImageSize(resultUpload);
     const avatarURL = path.join('avatars', fileName);
     await User.findByIdAndUpdate(_id, { avatarURL });
 
